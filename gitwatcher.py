@@ -12,7 +12,7 @@ class GitWatcher(object):
 	def __init__(self, options):
 		self.directory = options["directory"]
 		self.icon = options["icon"]
-		self.display_time = int(options.get("display_time", 3600000))
+		self.display_time = options.get("display_time", "3600000")
 
 		self.branch_dir = ["refs", "heads"]
 		self.git_command = ["git", "--git-dir", self.directory]
@@ -30,7 +30,6 @@ class GitWatcher(object):
 
 		notifier = ThreadedNotifier(self.__wm, self.process_event)
 		notifier.start()
-		self.display_notify(self.get_commit_title(), self.get_commit_text())
 
 	def process_event(self, event):
 		(name, ext) = os.path.splitext(event.pathname)
@@ -39,7 +38,7 @@ class GitWatcher(object):
 		self.display_notify(self.get_commit_title(), self.get_commit_text())
 
 	def display_notify(self, title, text):
-		Popen(["notify-send", "-t", "3600000", "-a", "git", "-i", self.icon, "-u", "low", title, text])
+		Popen(["notify-send", "-t", self.display_time, "-a", "git", "-i", self.icon, "-u", "low", title, text])
 
 	def call_git(self, arguments):
 		return str(Popen(self.git_command + arguments, stdin=PIPE, stdout=PIPE, stderr=PIPE).stdout.readall(), encoding="utf-8")
