@@ -30,7 +30,6 @@ class GitWatcher(object):
 
 		notifier = ThreadedNotifier(self.__wm, self.process_event)
 		notifier.start()
-		self.display_notify(self.get_commit_title(), self.get_commit_text())
 
 	def process_event(self, event):
 		(name, ext) = os.path.splitext(event.pathname)
